@@ -33,6 +33,12 @@
                remark
         from sys_dict_data
     </sql>
+    <!--同步修改字典类型-->
+    <update id="updateDictDataType">
+        update sys_dict_data
+        set dict_type = #{newDictType}
+        where dict_type = #{oldDictType}
+    </update>
     <!--字典列表-->
     <select id="selectDictDataList" parameterType="SysDictData" resultMap="SysDictDataResult">
         <include refid="selectDictDataVo"/>
@@ -49,5 +55,15 @@
         </where>
         order by dict_sort asc
     </select>
-
+    <!--查询字典类型详细-->
+    <select id="selectDictTypeById" resultType="Long" resultMap="SysDictDataResult">
+        <include refid="selectDictDataVo"></include>
+        where dict_id =#{dictId}
+    </select>
+    <!--查询字典数据-->
+    <select id="countDictDataByType" resultType="Integer">
+        select count(1)
+        from sys_dict_data
+        where dict_type = #{dictType}
+    </select>
 </mapper>

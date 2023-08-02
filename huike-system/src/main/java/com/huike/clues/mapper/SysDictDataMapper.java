@@ -1,6 +1,7 @@
 package com.huike.clues.mapper;
 
 import com.huike.common.core.domain.entity.SysDictData;
+import com.huike.common.core.domain.entity.SysDictType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,4 +23,25 @@ public interface SysDictDataMapper {
     List<SysDictData> selectDictDataList(SysDictData dictData);
 
 
+    /**
+     * 查询字典类型详细
+     * @param dictId
+     * @return
+     */
+    SysDictType selectDictTypeById(@Param("dictId") Long dictId);
+
+    /**
+     * 同步修改字典类型
+     * @param oldDictType
+     * @param newDictType
+     * @return
+     */
+    int updateDictDataType(@Param("oldDictType") String oldDictType, @Param("newDictType") String newDictType);
+
+    /**
+     * 查询字典数据
+     * @param dictType
+     * @return
+     */
+    int countDictDataByType(String dictType);
 }

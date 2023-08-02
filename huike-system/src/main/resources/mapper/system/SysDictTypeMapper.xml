@@ -17,6 +17,73 @@
         select dict_id, dict_name, dict_type, status, create_by, create_time, remark
         from sys_dict_type
     </sql>
+    <!--新增保存字典类型信息-->
+    <insert id="insertDictType" parameterType="sysDictType">
+        insert into sys_dict_type(
+        <if test="dictName != null and dictName != ''">
+            dict_name,
+        </if>
+        <if test="dictType != null and dictType != ''">
+            dict_type,
+        </if>
+        <if test="status != null ">
+            status,
+        </if>
+        <if test="remark != null and remark != ''">
+            remark,
+        </if>
+        <if test="createBy != null and createBy != ''">
+            create_by,
+        </if>
+        create_time
+        )values (
+        <if test="dictName != null and dictName != ''">
+            #{dictName},
+        </if>
+        <if test="dictType != null and dictType != ''">
+            #{dictType},
+        </if>
+        <if test="status != null ">
+            #{status},
+        </if>
+        <if test="remark != null and remark != ''">
+            #{remark},
+        </if>
+        <if test="createBy != null and createBy != ''">
+            #{createBy},
+        </if>
+        sysdate()
+        )
+    </insert>
+    <update id="updateDictType" parameterType="sysDictType">
+        update sys_dict_type
+        <set>
+            <if test="dictName != null and dictName != ''">
+                and dict_name = #{dictName}
+            </if>
+            <if test="dictType != null and dictType != ''">
+                and dict_type = #{dictType}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="remark != null">
+                and remark = #{remark}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and update_by = #{updateBy}
+            </if>
+            and update_time = sysdate()
+        </set>
+        where dict_id = #{dictId}
+    </update>
+    <!--批量删除字典类型信息-->
+    <delete id="deleteDictTypeByIds" parameterType="Long">
+        delete from sys_dict_type where dict_id in
+        <foreach collection="array" item="dictId" open="(" separator="," close=")">
+            #{dictId}
+        </foreach>
+    </delete>
 
     <!--分页查询数据字典类型信息-->
     <select id="selectDictTypeList" resultType="SysDictType" resultMap="SysDictTypeResult">
@@ -39,4 +106,20 @@
             </if>
         </where>
     </select>
+
+    <!--校验字典类型称是否唯一-->
+    <select id="checkDictTypeUnique" resultType="String" resultMap="SysDictTypeResult">
+        <include refid="selectDictTypeVo"></include>
+        where dict_type = #{dictType} limit 1
+    </select>
+    <!--根据字典类型ID查询信息-->
+    <select id="selectDictTypeById" resultType="SysDictType" resultMap="SysDictTypeResult">
+        <include refid="selectDictTypeVo"></include>
+        where dict_type = #{dictType}
+    </select>
+    <!--获取字典选择框列表-->
+    <select id="selectDictTypeAll" resultType="SysDictType" resultMap="SysDictTypeResult">
+        <include refid="selectDictTypeVo"/>
+    </select>
+
 </mapper>
